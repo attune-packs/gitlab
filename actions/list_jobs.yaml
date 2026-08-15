@@ -1,0 +1,23 @@
+ref: gitlab.list_jobs
+label: "List GitLab project jobs"
+description: "List all project jobs or jobs in one pipeline with bounded pagination"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: gitlab_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "gitlab.credentials", key_ref: true, description: "Pack-owned GitLab credential Key ref"}
+  project: {type: string, required: true, description: "Numeric project ID or path_with_namespace"}
+  pipeline_id: {type: integer, minimum: 1, description: "When set, list jobs only for this pipeline"}
+  scopes: {type: array, items: {type: string, enum: [canceled, canceling, created, failed, manual, pending, preparing, running, scheduled, skipped, success, waiting_for_callback, waiting_for_resource]}, description: "Job statuses to include"}
+  include_retried: {type: boolean, description: "Include retried jobs when pipeline_id is set"}
+  per_page: {type: integer, default: 100, minimum: 1, maximum: 100}
+  max_pages: {type: integer, default: 10, minimum: 1, maximum: 100}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [gitlab, jobs, list]

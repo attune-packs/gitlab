@@ -1,0 +1,20 @@
+ref: gitlab.get_project
+label: "Get GitLab project"
+description: "Retrieve project metadata by numeric ID or namespaced path"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: gitlab_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "gitlab.credentials", key_ref: true, description: "Pack-owned GitLab credential Key ref"}
+  project: {type: string, required: true, description: "Numeric project ID or path_with_namespace"}
+  license: {type: boolean, default: false}
+  statistics: {type: boolean, default: false}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [gitlab, projects, get]

@@ -1,0 +1,31 @@
+ref: gitlab.list_issues
+label: "List GitLab project issues"
+description: "List issues in a project with filters and bounded pagination"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: gitlab_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "gitlab.credentials", key_ref: true, description: "Pack-owned GitLab credential Key ref"}
+  project: {type: string, required: true, description: "Numeric project ID or path_with_namespace"}
+  state: {type: string, enum: [opened, closed, all]}
+  scope: {type: string, enum: [created_by_me, assigned_to_me, all]}
+  search: {type: string}
+  labels: {type: string, description: "Comma-separated label names"}
+  assignee_id: {type: integer, minimum: 1}
+  author_id: {type: integer, minimum: 1}
+  confidential: {type: boolean}
+  updated_after: {type: string, description: "ISO 8601 timestamp"}
+  updated_before: {type: string, description: "ISO 8601 timestamp"}
+  order_by: {type: string, enum: [created_at, updated_at, priority, due_date, relative_position, label_priority, milestone_due, popularity, weight]}
+  sort: {type: string, enum: [asc, desc]}
+  per_page: {type: integer, default: 100, minimum: 1, maximum: 100}
+  max_pages: {type: integer, default: 10, minimum: 1, maximum: 100}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [gitlab, issues, list]
