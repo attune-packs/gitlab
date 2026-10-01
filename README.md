@@ -8,7 +8,9 @@ checkout, commit, branch, or push operations from the `git` pack.
 
 ## Setup
 
-Create an encrypted, pack-owned Key named `gitlab.credentials`:
+Create an encrypted, pack-owned Key with `local_ref: credentials`, `name`,
+`owner_type: pack`, `owner_pack_ref: gitlab`, and the object below as `value`.
+Attune constructs the canonical `pack.gitlab.credentials` ref used by actions.
 
 ```json
 {

@@ -91,7 +91,7 @@ class PackTests(unittest.TestCase):
             self.assertIn("parameter_format: json\n", text, str(path))
             self.assertIn("output_format: json\n", text, str(path))
             self.assertIn("default_execution_permission_set_refs: [standard]\n", text, str(path))
-            self.assertIn('default: "gitlab.credentials", key_ref: true', text, str(path))
+            self.assertIn('default: "pack.gitlab.credentials", key_ref: true', text, str(path))
             self.assertIn("  operation: {type: string, required: true}\n", text, str(path))
             self.assertIn("  result: {type: object, required: true}\n", text, str(path))
             self.assertNotIn("\n  token:", text, str(path))
@@ -293,10 +293,10 @@ class PackTests(unittest.TestCase):
                 with self.subTest(operation=operation), self.assertRaises(gitlab_client.GitLabPackError):
                     gitlab_client.execute_action(operation, params)
 
-    def test_key_lookup_requests_decryption(self):
+    def test_key_lookup_uses_current_sdk_signature(self):
         calls = {}
         get_key = ModuleType("attune.api_client.api.secrets.get_key")
-        get_key.sync_detailed = lambda ref, *, client, decrypt: calls.update(ref=ref, client=client, decrypt=decrypt) or SimpleNamespace(
+        get_key.sync_detailed = lambda ref, *, client: calls.update(ref=ref, client=client) or SimpleNamespace(
             status_code=200,
             parsed=SimpleNamespace(data=SimpleNamespace(value={"base_url": "https://gitlab.example.invalid", "token": "synthetic"})),
         )
@@ -311,8 +311,8 @@ class PackTests(unittest.TestCase):
             "attune.api_client.api.secrets": secrets,
         }
         with patch.dict(sys.modules, modules):
-            gitlab_client._fetch_key("gitlab.credentials")
-        self.assertEqual(calls, {"ref": "gitlab.credentials", "client": "execution-client", "decrypt": True})
+            gitlab_client._fetch_key("pack.gitlab.credentials")
+        self.assertEqual(calls, {"ref": "pack.gitlab.credentials", "client": "execution-client"})
 
     def test_entrypoint_rejects_malformed_json_without_echoing_it(self):
         module = load_module("gitlab_action_test", PACK_ROOT / "actions" / "gitlab_action.py")

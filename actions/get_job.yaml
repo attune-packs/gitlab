@@ -10,7 +10,7 @@ parameter_format: json
 output_format: json
 default_execution_permission_set_refs: [standard]
 parameters:
-  credential_key: {type: string, default: "gitlab.credentials", key_ref: true, description: "Pack-owned GitLab credential Key ref"}
+  credential_key: {type: string, default: "pack.gitlab.credentials", key_ref: true, description: "Pack-owned GitLab credential Key ref"}
   project: {type: string, required: true, description: "Numeric project ID or path_with_namespace"}
   job_id: {type: integer, required: true, minimum: 1, description: "Global job ID"}
 output:

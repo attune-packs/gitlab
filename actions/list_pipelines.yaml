@@ -10,7 +10,7 @@ parameter_format: json
 output_format: json
 default_execution_permission_set_refs: [standard]
 parameters:
-  credential_key: {type: string, default: "gitlab.credentials", key_ref: true, description: "Pack-owned GitLab credential Key ref"}
+  credential_key: {type: string, default: "pack.gitlab.credentials", key_ref: true, description: "Pack-owned GitLab credential Key ref"}
   project: {type: string, required: true, description: "Numeric project ID or path_with_namespace"}
   status: {type: string, enum: [created, waiting_for_resource, preparing, waiting_for_callback, pending, running, success, failed, canceling, canceled, skipped, manual, scheduled]}
   scope: {type: string, enum: [running, pending, finished, branches, tags]}

@@ -38,7 +38,7 @@ def _fetch_key(ref: str) -> Dict[str, Any]:
     except ImportError as exc:
         raise GitLabPackError("attune-sdk is required to resolve credential_key") from exc
     try:
-        response = get_key.sync_detailed(ref, client=attune.context.client, decrypt=True)
+        response = get_key.sync_detailed(ref, client=attune.context.client)
     except Exception as exc:
         raise GitLabPackError(f"unable to read credential Key {ref!r}") from exc
     status = int(response.status_code)
@@ -279,7 +279,7 @@ class GitLabClient:
 
 
 def _client(params: Mapping[str, Any]) -> GitLabClient:
-    ref = params.get("credential_key", "gitlab.credentials")
+    ref = params.get("credential_key", "pack.gitlab.credentials")
     return GitLabClient(_fetch_key(ref))
 
 
